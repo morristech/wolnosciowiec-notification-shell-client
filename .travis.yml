@@ -14,7 +14,7 @@ cache:
     - $HOME/.composer/cache/files
 
 before-install:
-  - git clone https://github.com/Wolnosciowiec/wolnosciowiec-notification /tmp/notification
+  - bash -c "git clone https://github.com/Wolnosciowiec/wolnosciowiec-notification /tmp/notification"
   - cd /tmp/notification && composer self-update
 
 install:
