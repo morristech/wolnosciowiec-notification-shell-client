@@ -1,0 +1,74 @@
+#!/bin/sh
+
+if [[ -f ~/.notificationrc ]]; then
+    source ~/.notificationrc
+fi
+
+show_help() {
+    echo " notification-send [-short options] [--long options]"
+    echo " Takes the JSON as a input and sends to the notification service"
+    echo ""
+    echo 'Example JSON: {"content": "something", "title": "some title", "group_name": "email"}'
+    echo ""
+    echo "Options:"
+    echo "  -h --help"
+    echo "  -v --verbose"
+    echo "  -t --type Message type eg. Message, MailMessage, Exception (depends on service configuration)"
+    echo ""
+}
+
+parse_arguments() {
+    verbose=0
+    message_type="Message"
+    OPTS=$(getopt --long help,verbose,type: --options hvt: -- "$@")
+    eval set -- "$OPTS"
+
+    while true ; do
+        case "$1" in
+            -h|--help)
+                show_help
+                exit 0
+                shift
+            ;;
+            -v|--verbose)
+                verbose=1
+                shift
+            ;;
+            -t|--type)
+                message_type=$2
+                shift
+            ;;
+            --)
+                shift
+                break
+            ;;
+            *)
+                shift
+            ;;
+        esac
+    done
+}
+
+run() {
+    read "message_content" <&0
+
+    if [[ ! $message_content ]]; then
+        echo " Error: JSON payload content cannot be empty"
+        exit 1
+    fi
+
+    # additional options
+    arg_verbose=""
+    if [[ $verbose == 1 ]]; then arg_verbose="-v"; fi
+
+    curl -X PUT \
+        -H "X-Auth-Token: $NOTIFICATION_TOKEN" \
+        -H "Cache-Control:no-cache" -d "$message_content" \
+        "$NOTIFICATION_SERVER/message/queue/add?message_type=$message_type" \
+        $arg_verbose
+
+    exit $?
+}
+
+parse_arguments "$@"
+run

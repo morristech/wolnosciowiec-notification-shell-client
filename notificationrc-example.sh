@@ -1,0 +1,2 @@
+NOTIFICATION_SERVER=http://localhost
+NOTIFICATION_TOKEN=xxx
