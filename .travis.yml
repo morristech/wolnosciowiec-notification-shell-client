@@ -6,6 +6,8 @@ php:
 
 env:
   - SYMFONY_VERSION="3.0.*" DB=mysql
+  - NOTIFICATION_SERVER=http://localhost:8000
+  - NOTIFICATION_TOKEN=
 
 cache:
   directories:
