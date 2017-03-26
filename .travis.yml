@@ -13,11 +13,9 @@ cache:
   directories:
     - $HOME/.composer/cache/files
 
-before-install:
+install:
   - bash -c "git clone https://github.com/Wolnosciowiec/wolnosciowiec-notification /tmp/notification"
   - cd /tmp/notification && composer self-update
-
-install:
   - cd /tmp/notification && cp app/config/notification.yml.dist app/config/notification.yml
   - cd /tmp/notification && cp app/config/parameters.yml.dist app/config/parameters.yml
   - cd /tmp/notification && composer install
