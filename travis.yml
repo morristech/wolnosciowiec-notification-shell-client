@@ -1,0 +1,25 @@
+language: php
+sudo: false
+
+php:
+  - '7.1'
+
+cache:
+  directories:
+    - $HOME/.composer/cache/files
+
+env:
+  - SYMFONY_VERSION="3.0.*" DB=mysql
+
+before-install:
+  - git clone https://github.com/Wolnosciowiec/wolnosciowiec-notification /tmp/notification
+  - cd /tmp/notification && composer self-update
+
+install:
+  - cd /tmp/notification && cp app/config/notification.yml.dist app/config/notification.yml
+  - cd /tmp/notification && cp app/config/parameters.yml.dist app/config/parameters.yml
+  - cd /tmp/notification && composer install
+  - cd /tmp/notification && php bin/console server:start
+
+script:
+  - ./test/run-tests.sh
