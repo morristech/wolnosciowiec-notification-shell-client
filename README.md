@@ -3,6 +3,9 @@ Notification client for shell
 
 Sends notifications using a [Wolnościowiec Notification](https://github.com/Wolnosciowiec/wolnosciowiec-notification)
 
+Requirements: 
+- jq
+- sh (basic sh, bash, or zsh)
 
 ### Examples with plain payload
 
@@ -19,6 +22,24 @@ $ echo '{"content": "There are periods in the life of human society when revolut
 ```
 
 ### Example: A plain message
+
+`notification-message-send` is preparing the JSON payload basing on shell arguments and sends it using `notification-send` command.
+
+```
+ notification-message-send [-short options] [--long options]
+ Takes input parameters and sends a "Message" type notification
+ Pass the content via stdin
+
+Options:
+  -h --help
+  -v --verbose
+  -i --id
+  -g --groupName
+  -r --couldBeTruncated
+  -t --title
+```
+
+Example usage:
 
 ```bash
 echo "**Food Not Bombs** is a loose-knit group of independent collectives, serving free vegan and vegetarian food to others. Food Not Bombs' ideology is that myriad corporate and government priorities are skewed to allow hunger to persist in the midst of abundance. To demonstrate this (and to reduce costs), a large amount of the food served by the group is surplus food from grocery stores, bakeries and markets that would otherwise go to waste. This group exhibits a form of franchise activism." | ./bin/notification-message-send -g slack -t "Food Not Bombs" -i test_id
