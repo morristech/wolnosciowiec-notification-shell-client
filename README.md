@@ -15,6 +15,7 @@ Example (validation failure):
 ```bash
 $ echo '{"content": "There are periods in the life of human society when revolution becomes an imperative necessity, when it proclaims itself as inevitable": "A Kropotkin quote", "group_name": "email"}' | ./notification-send --type Exception  
 {"success":false,"reason":"validation_failed","message":"service_name_required, request_information_required, exception_message_required"}
+
 ```
 
 ### Example: A plain message
