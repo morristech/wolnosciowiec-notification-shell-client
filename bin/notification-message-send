@@ -1,0 +1,119 @@
+#!/bin/sh
+
+BIN_DIR="$( dirname "${BASH_SOURCE[0]}" )"
+
+if [[ ! $PATH == *"$BIN_DIR"* ]]; then
+    export PATH="$PATH:$BIN_DIR"
+fi
+
+show_help() {
+    echo " notification-message-send [-short options] [--long options]"
+    echo " Takes input parameters and sends a \"Message\" type notification"
+    echo " Pass the content via stdin"
+    echo ""
+    echo "Options:"
+    echo "  -h --help"
+    echo "  -v --verbose"
+    echo "  -i --id"
+    echo "  -g --groupName"
+    echo "  -r --couldBeTruncated"
+    echo "  -t --title"
+    echo ""
+}
+
+parse_arguments() {
+    verbose=0
+    OPTS=$(getopt --long help,verbose,content:,id:,groupName:,couldBeTruncated,title: --options hvt:rg:i:c: -- "$@")
+    eval set -- "$OPTS"
+
+    message_type="Message"
+    message_content=""
+    message_id=""
+    message_group_name=""
+    message_could_be_truncated=0
+    message_title=""
+
+    while true ; do
+        case "$1" in
+            -h|--help)
+                show_help
+                exit 0
+                shift
+            ;;
+            -v|--verbose)
+                verbose=1
+                shift
+            ;;
+            -i|--id)
+                message_id=$2
+                shift
+            ;;
+            -g|--groupName)
+                message_group_name=$2
+                shift
+            ;;
+            -r|--couldBeTruncated)
+                message_could_be_truncated=1
+                shift
+            ;;
+            -t|--title)
+                message_title=$2
+                shift
+            ;;
+            --)
+                shift
+                break
+            ;;
+            *)
+                shift
+            ;;
+        esac
+    done
+}
+
+run() {
+    read "message_content" <&0
+
+    if [[ ! $message_content ]]; then
+        echo " Error: content cannot be empty"
+        exit 1
+    fi
+
+    if [[ ! $message_group_name ]]; then
+        echo " Error: missing groupName"
+        exit 1
+    fi
+
+    if [[ ! $message_title ]]; then
+       echo " Error: missing title"
+       exit 1
+    fi
+
+    payload="{ \"content\": \$content, \"title\": \$title, \"group_name\": \$groupName"
+
+    if [[ $message_id ]]; then payload="$payload, \"id\": \$id"; fi
+    if [[ $message_could_be_truncated == 1 ]]; then payload="$payload, \"could_be_truncated\": true"; fi
+
+    payload="$payload }"
+    args=""
+
+    json=$(jq -n \
+        --arg content "$message_content" \
+        --arg title "$message_title" \
+        --arg groupName "$message_group_name" \
+        --arg id "$message_id" \
+        "$payload")
+
+    if [[ $verbose == 1 ]]; then
+        echo " ~ Sending payload: "
+        echo "$json"
+
+        args=" -v"
+    fi
+
+    echo $json | notification-send -t $message_type $args
+    exit $?
+}
+
+parse_arguments "$@"
+run
