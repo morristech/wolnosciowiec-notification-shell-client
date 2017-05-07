@@ -1,6 +1,6 @@
 #!/bin/sh
 
-BIN_DIR="$( dirname "${BASH_SOURCE[0]}" )"
+BIN_DIR="$( cd $(dirname "${BASH_SOURCE[0]}") && pwd )"
 
 if [[ ! $PATH == *"$BIN_DIR"* ]]; then
     export PATH="$PATH:$BIN_DIR"
