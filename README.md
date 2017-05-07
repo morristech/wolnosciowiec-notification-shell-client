@@ -5,7 +5,7 @@ Sends notifications using a [Wolnościowiec Notification](https://github.com/Wol
 
 Requirements: 
 - jq
-- sh (basic sh, bash, or zsh)
+- bash
 
 ### Installation
 
