@@ -50,7 +50,7 @@ parse_arguments() {
 }
 
 run() {
-    read "message_content" <&0
+    message_content=`cat`
 
     if [[ ! $message_content ]]; then
         echo " Error: JSON payload content cannot be empty"
