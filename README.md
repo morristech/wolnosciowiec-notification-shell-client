@@ -7,6 +7,12 @@ Requirements:
 - jq
 - sh (basic sh, bash, or zsh)
 
+### Installation
+
+1. Clone into /opt `cd /opt && git clone https://github.com/Wolnosciowiec/wolnosciowiec-notification-shell-client`
+2. `cd` to the root directory of the cloned repository `cd wolnosciowiec-notification-shell-client`
+3. Execute `sudo ./install-symlinks.sh`
+
 ### Examples with plain payload
 
 Example (sending a simple mail):
