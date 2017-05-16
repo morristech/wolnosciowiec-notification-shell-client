@@ -1,8 +1,7 @@
 #!/bin/bash
 
-if [[ -f ~/.notificationrc ]]; then
-    source ~/.notificationrc
-fi
+if [[ -f /.notificationrc ]]; then source /.notificationrc; fi
+if [[ -f ~/.notificationrc ]]; then source ~/.notificationrc; fi
 
 show_help() {
     echo " notification-send [-short options] [--long options]"
